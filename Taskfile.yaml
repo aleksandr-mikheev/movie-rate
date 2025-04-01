@@ -1,0 +1,100 @@
+version: '3'
+
+vars:
+  PHP: '{{if not .LOCALLY}}docker compose exec -it php{{end}}'
+
+env:
+  APP_ENV: dev
+
+dotenv:
+  - '.env.{{.APP_ENV}}.local'
+  - '.env.{{.APP_ENV}}'
+  - '.env.local'
+  - '.env'
+
+tasks:
+  up:
+    cmds:
+      - 'docker compose up --detach --remove-orphans {{.CLI_ARGS}}'
+      - task: install
+
+  down: 'docker compose down --remove-orphans {{.CLI_ARGS}}'
+
+  start:
+    cmds:
+      - 'docker compose start {{.CLI_ARGS}}'
+      - task: install
+
+  stop: 'docker compose stop {{.CLI_ARGS}}'
+
+  php: '{{.PHP}} sh'
+
+  install:
+    cmd: '{{.PHP}} composer install {{.CLI_ARGS}}'
+    sources:
+      - composer.json
+      - composer.lock
+    generates:
+      - vendor/autoload.php
+
+  db:
+    deps: [install]
+    cmds:
+      - "{{.PHP}} bin/console doctrine:database:create --if-not-exists {{.CLI_ARGS}}"
+      - "{{.PHP}} bin/console doctrine:migrations:migrate --no-interaction {{.CLI_ARGS}}"
+
+  db-recreate:
+    deps: [install]
+    cmds:
+      - '{{.PHP}} bin/console doctrine:database:drop --if-exists --force {{.CLI_ARGS}}'
+      - { task: db }
+
+  var:
+    cmd: mkdir -p var
+    status:
+      - test -d var
+    silent: true
+    internal: true
+
+  test:
+    deps: [var, install]
+    cmd: '{{.PHP}} vendor/bin/phpunit {{.CLI_ARGS}}'
+
+  fixcs:
+    deps: [var, install ]
+    cmd: '{{.PHP}} vendor/bin/php-cs-fixer fix --diff --verbose {{.CLI_ARGS}}'
+
+  lint:
+    cmds:
+      - task: fixcs
+        vars:
+          CLI_ARGS: '--dry-run {{.CLI_ARGS}}'
+
+  phpstan:
+    deps: [var, install]
+    cmd: '{{.PHP}} vendor/bin/phpstan'
+
+  composer-validate: '{{.PHP}} composer validate --strict --no-check-publish {{.CLI_ARGS}}'
+
+  composer-audit: '{{.PHP}} composer audit {{.CLI_ARGS}}'
+
+  doctrine-check:
+    deps: [ db ]
+    cmds:
+      - "{{.PHP}} bin/console doctrine:schema:validate --no-interaction --skip-sync {{.CLI_ARGS}}"
+      - "{{.PHP}} bin/console doctrine:mapping:info --no-interaction {{.CLI_ARGS}}"
+
+  di-lint:
+    deps: [ install ]
+    cmds:
+      - "{{.PHP}} bin/console cache:clear --env=prod {{.CLI_ARGS}}"
+      - "{{.PHP}} bin/console lint:container --env=prod {{.CLI_ARGS}}"
+
+  check:
+    cmds:
+      - task: lint
+      - task: phpstan
+      - task: composer-validate
+      - task: composer-audit
+      - task: di-lint
+      - task: doctrine-check
