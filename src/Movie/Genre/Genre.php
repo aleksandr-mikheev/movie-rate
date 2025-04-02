@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace MovieRate\Genre;
+namespace MovieRate\Movie\Genre;
 
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping\Column;
@@ -22,6 +22,8 @@ readonly class Genre
         public Uuid $id,
         #[Column(type: Types::STRING)]
         public string $name,
+        #[Column(type: Types::STRING, nullable: true)]
+        public ?string $info,
         #[Column(type: Types::DATETIMETZ_IMMUTABLE)]
         public \DateTimeImmutable $createdAt,
     ) {}
@@ -29,9 +31,10 @@ readonly class Genre
     public static function create(CreateGenre $command): self
     {
         return new self(
-            $command->id,
-            $command->name,
-            $command->at,
+            id: $command->id,
+            name: $command->name,
+            info: $command->info,
+            createdAt: $command->at,
         );
     }
 }

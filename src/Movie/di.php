@@ -2,13 +2,16 @@
 
 declare(strict_types=1);
 
-namespace MovieRate\Genre;
+namespace MovieRate\Movie;
 
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 
 return static function (ContainerConfigurator $di): void {
-    $di->services()
+    $services = $di->services()
         ->defaults()
         ->autowire()
-        ->autoconfigure();
+        ->autoconfigure()
+    ;
+
+    // $services->load(__NAMESPACE__ . '\\', __DIR__ . '/');
 };

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace MovieRate\ItOps\Uuid;
 
 use Ramsey\Uuid\Uuid as RamseyUuid;
+
 use function Ramsey\Uuid\v7;
 
 final readonly class Uuid implements \JsonSerializable
