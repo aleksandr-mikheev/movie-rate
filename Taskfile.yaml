@@ -78,6 +78,22 @@ tasks:
 
   composer-audit: '{{.PHP}} composer audit {{.CLI_ARGS}}'
 
+  composer-normalize-fix:
+    deps: [ install ]
+    cmds:
+      - '{{.PHP}} composer bump {{.CLI_ARGS}}'
+      - '{{.PHP}} composer normalize --diff {{.CLI_ARGS}}'
+
+  composer-normalize:
+    cmds:
+      - task: composer-normalize-fix
+        vars:
+          CLI_ARGS: '--dry-run {{.CLI_ARGS}}'
+
+  composer-check-require:
+    deps: [ install ]
+    cmd: '{{.PHP}} vendor/bin/composer-require-checker check {{.CLI_ARGS}}'
+
   doctrine-check:
     deps: [ db ]
     cmds:
@@ -96,5 +112,7 @@ tasks:
       - task: phpstan
       - task: composer-validate
       - task: composer-audit
+      - task: composer-normalize
+      - task: composer-check-require
       - task: di-lint
       - task: doctrine-check

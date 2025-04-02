@@ -1,5 +1,5 @@
-FROM spiralscout/roadrunner:2024.1 AS roadrunner
-FROM php:8.3-cli-alpine3.17
+FROM spiralscout/roadrunner:2024.3.5 AS roadrunner
+FROM php:8.3-cli-alpine3.21
 
 RUN mkdir root/history
 
