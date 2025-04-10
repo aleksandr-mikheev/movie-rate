@@ -6,9 +6,9 @@ namespace MovieRate\Movie\Genre\fixtures;
 
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
-use MovieRate\ItOps\Uuid\Uuid;
 use MovieRate\Movie\Genre\CreateGenre;
 use MovieRate\Movie\Genre\Genre;
+use MovieRate\ItOps\Uuid\Uuid;
 
 final class GenreFixtures extends Fixture
 {

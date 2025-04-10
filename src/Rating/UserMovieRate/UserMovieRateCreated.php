@@ -2,18 +2,16 @@
 
 declare(strict_types=1);
 
-namespace MovieRate\Movie\UserMovieGenreRate;
+namespace MovieRate\Rating\UserMovieRate;
 
 use MovieRate\ItOps\Uuid\Uuid;
 
-final class CreateUserMovieGenreRate
+final readonly class UserMovieRateCreated
 {
     public function __construct(
         public Uuid $id,
         public Uuid $userId,
-        public Uuid $genreId,
         public Uuid $movieId,
         public int $rate,
-        public \DateTimeImmutable $at = new \DateTimeImmutable(),
     ) {}
 }

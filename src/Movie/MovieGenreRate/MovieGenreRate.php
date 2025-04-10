@@ -2,13 +2,15 @@
 
 declare(strict_types=1);
 
-namespace MovieRate\Movie\UserMovieGenreRate;
+namespace MovieRate\Movie\MovieGenreRate;
+
+use MovieRate\ItOps\Uuid\Uuid;
 
 final class MovieGenreRate
 {
     private function __construct(
-        public string $movieId,
-        public string $genreId,
+        public Uuid $movieId,
+        public Uuid $genreId,
         public float $rating,
         private int $userRateTotal,
         private int $userRateCount,

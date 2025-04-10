@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace MovieRate\Movie\UserMovieGenreRate;
+namespace MovieRate\Rating\UserMovieGenreRate;
 
 use MovieRate\ItOps\Aggregate\AggregateRoot;
 use MovieRate\ItOps\Uuid\Uuid;

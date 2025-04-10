@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Movie;
+namespace MovieRate\Tests\Movie;
 
 use MovieRate\ItOps\Uuid\Uuid;
 use MovieRate\Movie\CreateMovie;
