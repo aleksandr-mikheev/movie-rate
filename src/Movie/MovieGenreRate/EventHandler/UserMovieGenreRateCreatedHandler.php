@@ -20,7 +20,6 @@ final readonly class UserMovieGenreRateCreatedHandler
 
     public function __invoke(UserMovieGenreRateCreated $event): void
     {
-
         try {
             $movieGenreRate = $this->repository->get($event->movieId, $event->genreId);
             $movieGenreRate->update($event->rate);
